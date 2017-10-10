@@ -15,41 +15,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
 package it.cnr.istc.stlab.csv2rdf.csvgraph;
- 
- 
+
 import java.util.List;
- 
-import org.apache.jena.graph.Node ;
+
+import org.apache.jena.graph.Node;
 import org.apache.jena.propertytable.Column;
 import org.apache.jena.propertytable.PropertyTable;
- 
+
 /**
  * The simple implementation of Column
  *
  */
 public class ColumnImpl implements Column {
-     
-     
+
     private final PropertyTable table;
     private Node p;
- 
+
     ColumnImpl(PropertyTable table, Node p) {
         this.table = table;
         this.p = p;
     }
- 
+
     @Override
     public PropertyTable getTable() {
         return table;
     }
- 
+
     @Override
     public Node getColumnKey() {
         return p;
     }
- 
+
     @Override
     public List<Node> getValues() {
         return table.getColumnValues(this);

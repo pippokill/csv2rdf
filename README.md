@@ -17,10 +17,13 @@ The JAR stlab.csv2rdf-1.0.jar can be used as a command line tool.
 The synopsis is the following
 
 ```bash
-java -jar stlab.csv2rdf-1.0.jar [OPTIONS] CSV_FILE
+java -jar stlab.csv2rdf-1.0.jar [OPTIONS]
 ```
 
 The options available are the following:
+
+* -i,--input &lt;char&gt;
+The name of the CSV input file.
 
 * -s,--separator &lt;char&gt;   
 The character used as separator within the CSV file (e.g. , or ;).

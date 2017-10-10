@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package it.cnr.istc.stlab.csv2rdf.csvgraph;
 
 import java.util.Properties;
@@ -23,46 +22,46 @@ import java.util.Properties;
 import org.apache.jena.propertytable.PropertyTable;
 import org.apache.jena.propertytable.graph.GraphPropertyTable;
 
-
 /**
- * GraphCSV is a sub class of GraphPropertyTable aiming at CSV data.
- * Its constructor takes a CSV file path as the parameter, parse the file using a CSV Parser,
- * and makes a PropertyTable through PropertyTableBuilder.
+ * GraphCSV is a sub class of GraphPropertyTable aiming at CSV data. Its
+ * constructor takes a CSV file path as the parameter, parse the file using a
+ * CSV Parser, and makes a PropertyTable through PropertyTableBuilder.
  *
  */
 public class GraphCSV extends GraphPropertyTable {
-	
-	public static GraphCSV createHashMapImpl( String csvFilePath ){
-		return new GraphCSVHashMapImpl(csvFilePath);
-	}
-	
-	public static GraphCSV createArrayImpl( String csvFilePath ){
-		return new GraphCSVArrayImpl(csvFilePath);
-	}
-	
-	protected GraphCSV (PropertyTable table) {
-		super(table);
-	}
-	
-	// use the Java array implementation of PropertyTable for default
-	public GraphCSV ( String csvFilePath ){
-		super(PropertyTableBuilder.buildPropetyTableArrayImplFromCsv(csvFilePath));
-	}
-	
-	public GraphCSV (String namespace, Properties mapping, String csvFilePath){
-		super(PropertyTableBuilder.buildPropetyTableArrayImplFromCsv(namespace, mapping, csvFilePath));
-	}
+
+    public static GraphCSV createHashMapImpl(String csvFilePath) {
+        return new GraphCSVHashMapImpl(csvFilePath);
+    }
+
+    public static GraphCSV createArrayImpl(String csvFilePath) {
+        return new GraphCSVArrayImpl(csvFilePath);
+    }
+
+    protected GraphCSV(PropertyTable table) {
+        super(table);
+    }
+
+    // use the Java array implementation of PropertyTable for default
+    public GraphCSV(String csvFilePath) {
+        super(PropertyTableBuilder.buildPropetyTableArrayImplFromCsv(csvFilePath));
+    }
+
+    public GraphCSV(String namespace, Properties mapping, String csvFilePath) {
+        super(PropertyTableBuilder.buildPropetyTableArrayImplFromCsv(namespace, mapping, csvFilePath));
+    }
 }
 
+class GraphCSVHashMapImpl extends GraphCSV {
 
-class GraphCSVHashMapImpl extends GraphCSV{
-	protected GraphCSVHashMapImpl(String csvFilePath){
-		super(PropertyTableBuilder.buildPropetyTableHashMapImplFromCsv(csvFilePath));
-	}
+    protected GraphCSVHashMapImpl(String csvFilePath) {
+        super(PropertyTableBuilder.buildPropetyTableHashMapImplFromCsv(csvFilePath));
+    }
 }
 
-class GraphCSVArrayImpl extends GraphCSV{
-	protected GraphCSVArrayImpl(String csvFilePath){
-		super(PropertyTableBuilder.buildPropetyTableArrayImplFromCsv(csvFilePath));
-	}
+class GraphCSVArrayImpl extends GraphCSV {
+
+    protected GraphCSVArrayImpl(String csvFilePath) {
+        super(PropertyTableBuilder.buildPropetyTableArrayImplFromCsv(csvFilePath));
+    }
 }

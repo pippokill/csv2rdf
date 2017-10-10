@@ -19,96 +19,104 @@ import it.cnr.istc.stlab.csv2rdf.csvgraph.GraphCSV;
 
 public class Csv2Rdf {
 
-	public static final String SEPARATOR_OPTION = "s";
-	public static final String SEPARATOR_OPTIONS_LONG = "separator";
-	
-	public static final String OUTPUT_OPTION = "o";
-	public static final String OUTPUT_OPTIONS_LONG = "output";
-	
-	public static final String NAMESPACE_OPTION = "n";
-	public static final String NAMESPACE_OPTIONS_LONG = "namespace";
-	
-	public static final String MAPPING_OPTION = "m";
-	public static final String MAPPING_OPTIONS_LONG = "mapping";
-	
-	public static final String FORMAT_OPTION = "f";
-	public static final String FORMAT_OPTIONS_LONG = "format";
-	
-	
-	private static Csv2Rdf instance;
-	
-	private Csv2Rdf(){
-		CSV2RDF.init();	
-	}
-	
-	public static Csv2Rdf getInstance(){
-		if(instance == null) instance = new Csv2Rdf();
-		return instance;
-	}
-	
-	public Model convert(CsvTransformationConfig csvTransformationConfig) throws CsvReadingException {
-		
-		
-		
-		Model model = ModelFactory.createDefaultModel();
-		
-		File file = null;
-		
-		char sepChar = csvTransformationConfig.getSeparator();
-		
-		long csvSize = 0; 
-		
-		try {
-			file = File.createTempFile("tmp", ".csv");
-			
-			URI csvUri = csvTransformationConfig.getCsvUri();
-			InputStream csvIs = null;
-			if(!csvUri.isAbsolute()) csvIs = new FileInputStream(new File(csvUri.toString()));
-			else csvIs = csvUri.toURL().openStream();
-			
-			CSVReader reader = new CSVReader(new InputStreamReader(csvIs, "UTF-8"), sepChar);
-			CSVWriter writer = new CSVWriter(new FileWriter(file)); 
-			String[] row = null;
-		
-			while((row = reader.readNext()) != null){
-				writer.writeNext(row);
-				csvSize++;
-			}
-			
-			reader.close();
-			writer.close();
-		} catch (IOException e) {
-			System.out.println("An error occurred while reading file " + csvTransformationConfig.toString() + ".");
-			
-		}
-		
-		if(file != null){
-			
-			String namespace = csvTransformationConfig.getNamespace();
-			
-			Properties mapping = new Properties();
-			try {
-				
-				URI mappingUri = csvTransformationConfig.getMappingUri();
-				InputStream mappingIs = null;
-				if(!mappingUri.isAbsolute()) mappingIs = new FileInputStream(new File(mappingUri.toString()));
-				else mappingIs = mappingUri.toURL().openStream();
-				
-				mapping.load(mappingIs);
-			} catch (IOException e) {
-				mapping = null;
-				System.out.print("An error occurred while reading the mapping file provided (i.e. the file named " + csvTransformationConfig.getMappingUri().toString() + ").");
-			}
-			
-			Model csv = ModelFactory.createModelForGraph(new GraphCSV(namespace, mapping, file.getPath())) ;
-			model.add(csv.listStatements());
-			
-			file.delete();
-			
-			return model;
-		}
-		else throw new CsvReadingException(csvTransformationConfig.getCsvUri().toString());
-		
-		
-	}
+    public static final String SEPARATOR_OPTION = "s";
+    public static final String SEPARATOR_OPTIONS_LONG = "separator";
+
+    public static final String OUTPUT_OPTION = "o";
+    public static final String OUTPUT_OPTIONS_LONG = "output";
+
+    public static final String INPUT_OPTION = "i";
+    public static final String INPUT_OPTIONS_LONG = "input";
+
+    public static final String NAMESPACE_OPTION = "n";
+    public static final String NAMESPACE_OPTIONS_LONG = "namespace";
+
+    public static final String MAPPING_OPTION = "m";
+    public static final String MAPPING_OPTIONS_LONG = "mapping";
+
+    public static final String FORMAT_OPTION = "f";
+    public static final String FORMAT_OPTIONS_LONG = "format";
+
+    private static Csv2Rdf instance;
+
+    private Csv2Rdf() {
+        CSV2RDF.init();
+    }
+
+    public static Csv2Rdf getInstance() {
+        if (instance == null) {
+            instance = new Csv2Rdf();
+        }
+        return instance;
+    }
+
+    public Model convert(CsvTransformationConfig csvTransformationConfig) throws CsvReadingException {
+
+        Model model = ModelFactory.createDefaultModel();
+
+        File file = null;
+
+        char sepChar = csvTransformationConfig.getSeparator();
+
+        long csvSize = 0;
+
+        try {
+            file = File.createTempFile("tmp", ".csv");
+
+            URI csvUri = csvTransformationConfig.getCsvUri();
+            InputStream csvIs = null;
+            if (!csvUri.isAbsolute()) {
+                csvIs = new FileInputStream(new File(csvUri.toString()));
+            } else {
+                csvIs = csvUri.toURL().openStream();
+            }
+
+            CSVReader reader = new CSVReader(new InputStreamReader(csvIs, "UTF-8"), sepChar);
+            CSVWriter writer = new CSVWriter(new FileWriter(file));
+            String[] row = null;
+
+            while ((row = reader.readNext()) != null) {
+                writer.writeNext(row);
+                csvSize++;
+            }
+
+            reader.close();
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading file " + csvTransformationConfig.toString() + ".");
+
+        }
+
+        if (file != null) {
+
+            String namespace = csvTransformationConfig.getNamespace();
+
+            Properties mapping = new Properties();
+            try {
+
+                URI mappingUri = csvTransformationConfig.getMappingUri();
+                InputStream mappingIs = null;
+                if (!mappingUri.isAbsolute()) {
+                    mappingIs = new FileInputStream(new File(mappingUri.toString()));
+                } else {
+                    mappingIs = mappingUri.toURL().openStream();
+                }
+
+                mapping.load(mappingIs);
+            } catch (IOException e) {
+                mapping = null;
+                System.out.print("An error occurred while reading the mapping file provided (i.e. the file named " + csvTransformationConfig.getMappingUri().toString() + ").");
+            }
+
+            Model csv = ModelFactory.createModelForGraph(new GraphCSV(namespace, mapping, file.getPath()));
+            model.add(csv.listStatements());
+
+            file.delete();
+
+            return model;
+        } else {
+            throw new CsvReadingException(csvTransformationConfig.getCsvUri().toString());
+        }
+
+    }
 }
